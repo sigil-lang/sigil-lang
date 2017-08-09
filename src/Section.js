@@ -4,10 +4,13 @@ var md = new Remarkable({linkTarget: '_new', html: true});
 
 class Section extends Component {
   render() {
+    var style = {
+      marginBottom: 80,
+    };
     var rawMarkup = { __html: md.render(this.props.text)};
 
     return (
-      <div className="Section" id={this.props.id}>
+      <div className="Section" id={this.props.id} style={style}>
         <div dangerouslySetInnerHTML={rawMarkup} />
       </div>
     );
