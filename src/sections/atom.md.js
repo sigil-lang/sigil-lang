@@ -1,3 +1,9 @@
 export default `
-# Atomic Unit
+# Atomic Units
+---
+
+## Node
+
+## Relationship
+
 `;
