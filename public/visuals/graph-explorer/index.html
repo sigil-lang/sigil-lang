@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Graph generator</title>
+
+    <style>
+        body {
+            padding: 0px;
+            font-family: HelveticaNeue;
+            font-size: 11px;
+        }
+
+        #controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 10px;
+            background: hsla(0, 0%, 100%, 0.7);
+        }
+
+        #controls b {
+            font-size: 13px;
+            padding-right: 20px
+        }
+
+        #params,
+        #graph,
+        #colors,
+        #edges {
+            display: inline-block;
+            margin-left: 20px;
+        }
+
+        input {
+            width: 6ex;
+            margin-left: 1ex;
+            text-align: right;
+        }
+
+        label {
+            margin-right: 2ex;
+            font-family: Georgia;
+            font-style: italic;
+        }
+
+        input[type=range] {
+            width: 80px;
+            position: relative;
+            top: 4px
+        }
+
+        .node {
+            /* stroke: #fff; */
+            /* stroke-width: 1.5px; */
+            opacity: 0.8;
+        }
+
+        .link {
+            fill: none;
+            stroke-linecap: round;
+            stroke: #999;
+            stroke-opacity: .6;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+    <script src="randomGraph.js" charset="utf-8"></script>
+    <script src="networkClustering.js" charset="utf-8"></script>
+
+</head>
+
+<body>
+    <div id="controls">
+        <b>Random Graphs</b> <select>
+            <option data-p="r:4,h:4">BalancedTree</option>
+            <option data-p="n:150,m0:10,M:2">BarabasiAlbert</option>
+            <option data-p="n:150,p:0.05">ErdosRenyi.np</option>
+            <option data-p="n:100,m:250">ErdosRenyi.nm</option>
+            <option data-p="n:120,K:4,alpha:3.5">WattsStrogatz.alpha</option>
+            <option data-p="n:150,K:4,beta:0.07">WattsStrogatz.beta</option>
+        </select>
+        <div id="params">
+
+        </div>
+        <div id="graph">
+            <label>charge<input id="charge" type="range" min="0" value="50" max="200" /></label>
+            <label>node size<input id="nodeSize" type="range" min="1" value="5" max="50" /></label>
+            <label>edge opacity<input id="edgeOpacity" type="range" step="0.05" min="0" value="0.8" max="1" /></label>
+            <!-- <label>link distance<input id="dist" type="range" min="0" value="20" max="150" /></label> -->
+        </div>
+
+        <!-- Adjust the color settings  -->
+        <div id="colors">
+            <label id="form" for="color">color by<br>
+                <input type="radio" name="color" id="color_cluster" value="cluster" checked>cluster<br>
+                <input type="radio" name="color" id="color_category" value="category">category<br>
+                <input type="radio" name="color" id="color_uniform" value="uniform">uniform<br>
+            </label>
+        </div>
+
+        <!-- Adjust the edge look -->
+        <div id="edges">
+            <label id="form" for="edge">edge type<br>
+                <input type="radio" name="edge" id="type_solid" value="solid" checked>solid<br>
+                <input type="radio" name="edge" id="type_dashed" value="dashed">dashed<br>
+                <input type="radio" name="edge" id="type_dotted" value="dotted">dotted<br>
+                <input type="radio" name="edge" id="type_center_dots" value="center dots">center dots<br>
+                <input type="radio" name="edge" id="type_wavy" value="wavy">wavy<br>
+                <input type="radio" name="edge" id="type_zigzag" value="zigzag">zigzag<br>
+                <input type="radio" name="edge" id="type_combo" value="combo">combo<br>
+            </label>
+        </div>
+    </div>
+
+
+    <script>
+        var graph;
+
+        $('select').change(function () {
+            loadPreset($('select option:selected'));
+        });
+
+        loadPreset($('select option').get(0));
+
+        function loadPreset(opt) {
+            var P = $('#params').html('');
+            $.each($(opt).data('p').split(','), function (i, p) {
+                p = p.split(':');
+                var inp = $('<input />').val(p[1]).appendTo(
+                    $('<label />').html(p[0]).appendTo(P)
+                );
+                inp.change(update);
+            });
+
+            function update() {
+                var args = [];
+                $('input').each(function (i, el) {
+                    args.push(+$(el).val());
+                });
+                $('svg').remove();
+                renderForceGraph(eval('randomgraph.' + $(opt).html() + '(' + args.join(',') + ')'));
+            }
+            update();
+        }
+
+        function renderForceGraph(graph) {
+            var width = innerWidth - 40,
+                height = innerHeight - 40;
+
+            ///////////////////////////////////////////////////////////////////////
+            ////////////////////// Set up colors and edges ////////////////////////
+            ///////////////////////////////////////////////////////////////////////
+            //Set up the colors
+            var color = d3.scaleOrdinal(d3.schemeCategory20);
+            var colChecked = $('input[name=color]:checked').val();
+
+            //Set up the edge CSS styles
+            var edgeChecked = $('input[name=edge]:checked').val();
+            var solid = function(width) {
+                width = width || 1.5;
+                return  {'stroke-width': width, 'stroke-dasharray': 'none', }
+            };
+            var dashed = function() { return  {'stroke-width': 1.5, 'stroke-dasharray': '5,7'} };
+            var dotted = function() { return  {'stroke-width': 2.5, 'stroke-dasharray': '0,6'} };
+            var centerDots = function(dash) {
+                return  {'stroke-width': 1.5, 'stroke-dasharray': Math.round(dash) + ',5,0,5,0,5,0,5'}
+            };
+
+            ///////////////////////////////////////////////////////////////////////
+            //////////////////////////// Set up scales ////////////////////////////
+            ///////////////////////////////////////////////////////////////////////
+
+            //Node size scale ± depending on no. of nodes
+            var rScale = d3.scaleLinear()
+                .domain([1,1000])
+                .range([20,2]);
+
+            //Edge opacity scale ± depending on no. of nodes
+            var lineOpacityScale = d3.scaleLinear()
+                .domain([1,1000])
+                .range([0.9,0.4])
+                .clamp(true);
+
+            ///////////////////////////////////////////////////////////////////////
+            ////////////////////// Set up force simulation ////////////////////////
+            ///////////////////////////////////////////////////////////////////////
+
+            //Find a decent first setting for the charge and gravity
+            var k = Math.sqrt(graph.nodes.length / (width * height));
+            $('#charge').val(Math.round(0.5 / k))
+            var waveRange = 0.1/k; //The "radius" of the wave and zigzag edge types
+
+            //Initiate the force simulation
+            var simulation = d3.forceSimulation(graph.nodes)
+                //.force("link", d3.forceLink().distance( +$('#dist').val() ).strength(1) )
+                //.force("charge", d3.forceManyBody().strength( +$('#charge').val() * -1 ) )
+                //.force("center", d3.forceCenter())
+                .force("link", d3.forceLink(graph.edges).distance( 20 ).strength(1) )
+                .force("charge", d3.forceManyBody().strength( -1* Math.round(0.5 / k)) )
+                .force('x', d3.forceX(width/2).strength( 10*k ))
+                .force('y',  d3.forceY(height/2).strength( 10*k ))
+                //.on("tick", ticked);
+                 .stop();
+
+            //Create a static layout so quickly do the ticks
+            for (var i = 0; i < 100; ++i) simulation.tick();
+
+            //Do the network clustering
+            netClustering.cluster(graph.nodes, graph.edges);
+
+            ///////////////////////////////////////////////////////////////////////
+            /////////////////////// Set up SVG & elements /////////////////////////
+            ///////////////////////////////////////////////////////////////////////
+
+            //Create the SVG
+            var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g");
+
+            //Update the radius slider to something more appropriate
+            $('#nodeSize').val( rScale(graph.nodes.length) );
+            //Initiate the nodes
+            var node = svg.append("g").attr("class","node-wrapper").selectAll(".node")
+                .data(graph.nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", function() {
+                    return Math.max(1, Math.round( Math.random()*rScale(graph.nodes.length) ) ) + 1;
+                })
+                .style("fill", setColorStyle);
+
+            //Update the radius slider to something more appropriate
+            $('#edgeOpacity').val( lineOpacityScale(graph.nodes.length) );
+            //Initiate the links
+            var link = svg.append("g").attr("class","link-wrapper").selectAll(".link")
+                .data(graph.edges)
+                .enter().append("path")
+                .attr("class", "link")
+                .style("opacity", function() { return lineOpacityScale(graph.nodes.length); });
+
+            //Create the path of the links
+            updateNodesEdges();
+
+            ///////////////////////////////////////////////////////////////////////
+            ////////////////////// UI interaction functions ///////////////////////
+            ///////////////////////////////////////////////////////////////////////
+
+            //Update the appearance of the edges
+            d3.select("#edges").on('change',null).on('change', function() {
+                edgeChecked = $('input[name=edge]:checked').val();
+                link.styles(setEdgeStyle);
+                //Update the "radius" of the wave and zigzag
+                waveRange = 0.1/Math.sqrt(graph.nodes.length / (width * height));
+                updateNodesEdges();
+            });
+
+            //Update the colors of the nodes
+            d3.select("#colors").on('change',null).on('change', function() {
+                colChecked = $('input[name=color]:checked').val();
+                node.style("fill", setColorStyle);
+            });
+
+            //Update the node sizes
+            d3.select("#nodeSize").on('change',null).on('change', function() {
+                node.attr("r", function() {
+                    return Math.round( Math.random()*(+$('#nodeSize').val()));
+                });
+            });
+
+            //Update the edge opacities
+            d3.select("#edgeOpacity").on('change',null).on('change', function() {
+                link.style("opacity", function() {
+                    return +$('#edgeOpacity').val();
+                });
+            });
+
+            //Update the force settings and rerun the simulation
+            //$('input[type=range]').off('change').on('change', function() {
+            d3.select("#charge").on('change',null).on('change', function() {
+                simulation
+                    //.force("link", d3.forceLink(graph.edges).distance( +$('#dist').val() ).strength(1) )
+                    //.force("link", d3.forceLink(graph.edges).distance( 20 ).strength(1) )
+                    .force("charge", d3.forceManyBody().strength( +$('#charge').val() * -1 ) )
+                    .alpha(1)
+                    .stop();
+                for (var i = 0; i < 100; ++i) simulation.tick();
+                updateNodesEdges();
+            });
+
+            ///////////////////////////////////////////////////////////////////////
+            ///////////////////////// Appearance functions ////////////////////////
+            ///////////////////////////////////////////////////////////////////////
+
+            //Update the look of the edges
+            function updateNodesEdges() {
+                link
+                    .styles(setEdgeStyle)
+                    .attr("d", function(d) {
+
+                        var dx = +rnd2(d.target.x - d.source.x),
+                            dy = +rnd2(d.target.y - d.source.y),
+                            dr = +rnd2(Math.sqrt(dx * dx + dy * dy) * 2);
+
+                        var xSource = +rnd2(d.source.x),
+                            ySource = +rnd2(d.source.y),
+                            xTarget = +rnd2(d.target.x),
+                            yTarget = +rnd2(d.target.y);
+
+                        //Straight lines for most options
+                        if(d.edgeStyle  !== "wavy" & d.edgeStyle  !== "zigzag") {
+                            //Curved lines
+                            //return [ "M", d.source.x, d.source.y, "A", dr, dr, "0 0 1", d.target.x, d.target.y ].join( " " );
+
+                            //Straight lines
+                            return [ "M", xSource, ySource, "L", xTarget, yTarget ].join( " " );
+                        } else {
+
+                            //Draw a wavy sine-like or zigzagged line
+                            function upDownPath(split, minNum) {
+                                //Length of the edge path
+                                var length = dr/2;
+                                //How many in between start and end
+                                var nSplits = Math.max( minNum, Math.floor(length/split));
+                                //Recalculate to make it fit
+                                split = +rnd2(length/nSplits);
+                                //Get the angle to calculate the dx and dy that get added on each split
+                                var angle = +rnd2(Math.atan(dy/dx));
+                                var sx = +rnd2(split*Math.cos(angle));
+                                var sy = +rnd2(split*Math.sin(angle));
+                                //Calculate the delta offset for the anchor point
+                                var sq = +rnd2(Math.sqrt(2) * split/2);
+                                //Define the starting position
+                                var xStart = xSource < xTarget ? xSource : xTarget,
+                                    yStart = xSource < xTarget ? ySource : yTarget;
+                                //Up and down
+                                var dir = 1;
+                                //Initiate the path
+                                var path = "M" + xStart + "," + yStart;
+                                //Build up the rest of the line
+                                for(var i = 1; i <= nSplits; i++) {
+                                    xStart = +rnd2(xStart + sx);
+                                    yStart = +rnd2(yStart + sy);
+                                    if(d.edgeStyle  === "wavy") { //Use a bunch of Quadratic Bezier curves
+                                        path += "Q" + rnd2(xStart - sx + sq * Math.cos(angle + dir * Math.PI/4)) + "," + rnd2(yStart - sy + sq * Math.sin(angle + dir * Math.PI/4)) + " " + (xStart) + "," + (yStart) + " ";
+                                    } else if (d.edgeStyle  === "zigzag") {
+                                        path += "L" + rnd2(xStart - sx + sq * Math.cos(angle + dir * Math.PI/4)) + "," + rnd2(yStart - sy + sq * Math.sin(angle + dir * Math. PI/4)) + " L" + (xStart) + "," + (yStart) + " ";
+                                    }
+                                    dir *= -1;
+                                }//for i
+                                return path;
+                            }//function upDownPath
+
+                            return d.edgeStyle  === "wavy" ? upDownPath(waveRange, 10) : upDownPath(waveRange*0.6, 16);
+
+                        }//else
+                    });
+
+                //Update the node positions
+                node.attr("cx", function (d) { return d.x; })
+                    .attr("cy", function (d) { return d.y; });
+            }//function updateNodesEdges
+
+            function setEdgeStyle(d) {
+                d.edgeStyle = edgeChecked;
+                //Randomly reset the edgeStyles for combo
+                if(edgeChecked === "combo") {
+                    var dice = Math.random();
+                    if(dice <= 0.5) d.edgeStyle = "solid";
+                    else if(dice > 0.5 & dice <= 0.72) d.edgeStyle = "center dots";
+                    else if(dice > 0.72 & dice <= 0.79) d.edgeStyle = "dashed";
+                    else if(dice > 0.79 & dice <= 0.86) d.edgeStyle = "dotted";
+                    else if(dice > 0.86 & dice <= 0.93) d.edgeStyle = "wavy";
+                    else if(dice > 0.93 & dice <= 1) d.edgeStyle = "zigzag";
+                    else console.log("outside", dice);
+                }//if
+                //Call the right stylings
+                if(d.edgeStyle === "solid") return solid();
+                else if(d.edgeStyle === "dashed") return dashed();
+                else if(d.edgeStyle === "dotted") return dotted();
+                else if(d.edgeStyle === "center dots") {
+                    var dx = d.target.x - d.source.x,
+                        dy = d.target.y - d.source.y,
+                        pathLength = Math.sqrt(dx * dx + dy * dy); //this.getTotalLength();
+                    if(pathLength > 80) return centerDots((pathLength - 20)/2);
+                    else return solid(1.5);
+                }
+                else if(d.edgeStyle === "wavy") return solid();
+                else if(d.edgeStyle === "zigzag") return solid();
+            }//function setEdgeStyle
+
+            function setColorStyle(d) {
+                if(colChecked === "cluster") return color(d.cluster);
+                else if(colChecked === "category") return color( Math.floor( Math.random()*10 ) );
+                else return color(1);
+            }//function setColorStyle
+
+        }//function renderForceGraph
+
+        ///////////////////////////////////////////////////////////////////////
+        ////////////////////////// Helper functions ///////////////////////////
+        ///////////////////////////////////////////////////////////////////////
+
+        //Round number to 2 behind the decimal
+        function rnd2(num) {
+            return (Math.round(num * 100)/100).toFixed(2);
+        }//rnd2
+
+    </script>
+</body>
+
+</html>
