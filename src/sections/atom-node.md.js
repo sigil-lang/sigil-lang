@@ -22,4 +22,24 @@ A node should be represented by a **circle**. The default node has a light grey 
   * 0 properties: dashed
   * 1 or more properties: solid
 
+* Size: Can be chosen by the user. Either a constant or set to represent a numeric value (using area scaling, not radius scaling). Small circles indicating low values and the larger the circle the higher the value it represents. For example, scaling the nodes by the number of incoming relationships, or scaling the nodes by a property of the node, such as net worth of each actor/actress.
+  ![Atomic node radius vs area scaling](${require('../images/atom-node-4.png')})
+
+* Icon inside the circle can be used for
+  * Sub-categorization (when color is already used for category)
+  * Indication of state (open/closed, gender, progress along a workflow)
+
+  For advice on when icons can be properly used:
+
+  * At large scale (above 3 hem): Icons can be displayed within the nodes.
+  * At medium scale (between 2 and 3 hem): Only simple icons should be used that are easily distinguishable.
+  * At small scale (below 2 hem): Don’t use an icon, they cannot be distinguished easily enough at this scale. Also, because there are a lot of nodes visible at this scale typically, any icons within the node will create a lot of visual clutter.
+
+  In general, if you are placing an icon inside a node, make sure that the width or height of the icon inside the node is not larger than the radius of the node
+
+* Caption for each node: The styling is up to the user. Font-sizing corresponds with the hem scale used for the graph, where 1em font ~= 1hem
+  * At large scale (above 3 hem): There is enough room to give each node a proper caption
+  * At medium scale (between 1 and 3 hem): Only use short captions, to make sure you don’t have overlap of captions and (other) nodes
+  * At small scale (below 0.5 hem): Don’t use any caption, the text will have gotten too small. Also, because there are a lot of nodes visible at this scale typically, the captions of all the nodes will create a lot of visual clutter.
+
 `;
