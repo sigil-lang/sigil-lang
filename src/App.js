@@ -3,12 +3,23 @@ import Section from './Section';
 import _ from 'lodash';
 
 // determines what sections to load and their order
-var sectionIds = [
-  'atom',
-  'compound',
-  'aggregate',
-  'graph',
-  'scale',
+var sections = [
+  {
+    id: 'atom', title: 'Atomic Units',
+    children: [{id: 'atom-node', title: 'Node'}],
+  },
+  {
+    id: 'aggregate', title: 'Aggregate Nodes',
+  },
+  {
+    id: 'compound', title: 'Compound Units',
+  },
+  // {
+  //   id: 'sections', title: 'Sections',
+  // },
+  // {
+  //   id: 'appendix', title: 'Appendix',
+  // }
 ];
 
 var navWidth = 200;
@@ -26,18 +37,18 @@ class App extends Component {
       padding,
     };
 
-    var navLinks = sectionIds.map(id => {
+    var navLinks = sections.map(section => {
       return (
         <div>
-          <a href={'#' + id}>{_.capitalize(id)}</a>
+          <a href={'#' + section.id}>{section.title}</a>
         </div>
       )
     });
-    var sections = sectionIds.map(id => {
-      var text = require('./sections/' + id + '.md.js');
+    var sectionEls = sections.map(section => {
+      var text = require('./sections/' + section.id + '.md.js');
       text = text && text.default;
 
-      return (<Section key={id} id={id} text={text} />)
+      return (<Section key={section.id} id={section.id} text={text} />)
     });
     return (
       <div className="App">
@@ -45,7 +56,7 @@ class App extends Component {
           {navLinks}
         </div>
         <div id='content' style={contentStyle}>
-          {sections}
+          {sectionEls}
         </div>
       </div>
     );
