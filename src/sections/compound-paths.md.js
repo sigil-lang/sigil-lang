@@ -7,4 +7,8 @@ Line appearance for paths:
   * For relationships between nodes in the middle of the path, i.e. not the start- and endpoint, and any nodes outside of the path, will not be drawn in the collapsed state. As if the middle nodes have been taken out of the graph.
 
   ![Compound paths collapsed](${require('../images/compound-paths-1.png')})
+
+* Expanded: Denoted by a transparent grey envelope around the nodes and relationships along the path
+
+  ![Compound paths expanded](${require('../images/compound-paths-2.png')})
 `;
