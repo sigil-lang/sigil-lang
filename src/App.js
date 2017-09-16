@@ -6,7 +6,10 @@ import _ from 'lodash';
 var sections = [
   {
     id: 'atom', title: 'Atomic Units',
-    children: [{id: 'atom-node', title: 'Node'}],
+    children: [
+      {id: 'atom-node', title: 'Node'},
+      {id: 'atom-relationship', title: 'Relationship'}
+    ],
   },
   {
     id: 'aggregate', title: 'Aggregate Nodes',
