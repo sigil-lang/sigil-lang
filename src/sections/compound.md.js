@@ -2,9 +2,5 @@ export default `
 # Compound Units
 ---
 
-## Clusters
-
-## Bundles
-
-## Paths
+A collection of nodes and relationships.  The nodes and relationships can be either atomic or aggregate, and are visually represented as individual elements.
 `;
