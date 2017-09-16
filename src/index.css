@@ -7,3 +7,7 @@ body {
 iframe {
   border: 1px solid #999;
 }
+
+img {
+  max-width: 80%;
+}
