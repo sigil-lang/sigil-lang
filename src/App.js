@@ -25,6 +25,7 @@ var sections = [
 var navWidth = 200;
 var padding = 20;
 class App extends Component {
+
   render() {
     var navStyle = {
       width: navWidth,
@@ -37,19 +38,31 @@ class App extends Component {
       padding,
     };
 
-    var navLinks = sections.map(section => {
+    var navLinks = _.map(sections, section => {
       return (
         <div>
           <a href={'#' + section.id}>{section.title}</a>
+          <ul>
+            {_.map(section.children, section =>
+              <li><a href={'#' + section.id}>{section.title}</a></li>)}
+          </ul>
         </div>
       )
     });
-    var sectionEls = sections.map(section => {
-      var text = require('./sections/' + section.id + '.md.js');
-      text = text && text.default;
 
-      return (<Section key={section.id} id={section.id} text={text} />)
-    });
+    var sectionEls = _.chain(sections)
+      .reduce((array, section) => {
+        array.push(section);
+        // and also push in children
+        _.each(section.children, section => array.push(section));
+        return array;
+      }, []).map(section => {
+        var text = require('./sections/' + section.id + '.md.js');
+        text = text && text.default;
+
+        return (<Section key={section.id} id={section.id} text={text} />);
+      }).value();
+
     return (
       <div className="App">
         <div id='nav' style={navStyle}>
