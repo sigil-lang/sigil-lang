@@ -12,4 +12,10 @@ A group of atomic nodes aggregated together.  For example:
 * **By property value**: Nodes can also by aggregated by the *values* they contain. For example grouping all nodes that have a release date in a certain year, all nodes that have a net worth between two values, or all nodes that have “female” in the property of “gender”.
 
 * **By both metadata and property value**: By value and by metadata may be combined to refine the membership criteria of an aggregate. For instance, it may be interesting to group the records with “Actress” labels by their debut year, or their net worth, or both.  Similarly, it may be interesting to group the records with “Movie” labels by their box office earnings, and explore the graph that emerges.
+
+For an aggregate node it’s not needed for the underlying atomic nodes to have relationships to each other. They are defined as being grouped on their atomic node labels or properties, not the relationships. And there may be internal relationships that exist between the atomic nodes within an aggregated node.
+
+An aggregate node should be visually represented by a **circle with two strokes** (and some transparent space in between) and **a number in the middle** (representing the number of underlying nodes). It should follow the same rules as an atomic node in all other aspects: fill style, fill color, stroke color, and textual caption.
+
+![Aggregate nodes](${require('../images/aggregate-1.png')})
 `;
