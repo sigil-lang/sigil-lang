@@ -19,6 +19,7 @@ var sections = [
     children: [
       {id: 'compound-paths', title: 'Paths'},
       {id: 'compound-clusters', title: 'Clusters'},
+      {id: 'compound-bundles', title: 'Bundles'},
     ],
   },
   // {
