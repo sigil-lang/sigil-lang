@@ -5,10 +5,9 @@ An association between exactly two Nodes, with a direction "from" one and "to" a
 
 A relationship should be represented by a **line**. The default relationship has a light grey stroke with slight transparency.  We can add the following visual encodings to highlight specific relationship traits:
 
+<img src=${require('../images/atom-relationship-1.png')} alt='Atomic relationship arrow directionality' style='width:400px;float:right' />
 * Directionality:
   * At large scale(above 0.5 hem):
-
-    <img src=${require('../images/atom-relationship-1.png')} alt='Atomic relationship arrow directionality' width=300px />
     * One-directional: arrowhead (a filled triangle) indicating the direction
     * Bi-directional (or undirected): no arrowheads
   * At small scale (below 0.5 hem): Arrowheads become too small to properly see. At this scale no longer show any arrowheads

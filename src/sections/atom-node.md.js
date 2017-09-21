@@ -16,9 +16,8 @@ A node should be represented by a **circle**. The default node has a light grey 
   * At small scale (below 1 hem): Don’t use a separate stroke, just the fill color
   ![Atomic node stroke color at small and large scale](${require('../images/atom-node-2.png')})
 
+<img src=${require('../images/atom-node-3.png')} alt='Atomic node stroke style with or without properties' style='width:400px;float:right' />
 * Stroke style (note: stroke is only used in larger scale graphs where the nodes are big enough to have strokes at all):
-
-  <img src=${require('../images/atom-node-3.png')} alt='Atomic node stroke style with or without properties' width=300px />
   * 0 properties: dashed
   * 1 or more properties: solid
 
