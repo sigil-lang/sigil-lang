@@ -9,7 +9,7 @@ Appearance of a cluster:
   * At medium & large scale (hem scale between 3 and 5): combines the visual appearance of aggregate nodes and sections: Has a double stroke running around all cluster member nodes (with transparency in between the two strokes)
   * At small scale (below hem scale 1): node fill color is preferred for identifying cluster membership
 
-  ![Compound paths expanded](${require('../images/compound-clusters-1.png')})
+  ![Clusters at different scales](${require('../images/compound-clusters-1.png')})
 
 * Collapsed, appears as a single node. Visually the same as the representation of an aggregate node
   * Note however aggregate nodes are distinct from collapsed cluster nodes. Aggregate nodes are only useful in its collapsed state. The expanded state has no extra meaning, it’s just the normal nodes and relationships, whereas an expanded cluster node (into its underlying nodes and relationships) would still be seen as a structural cluster.

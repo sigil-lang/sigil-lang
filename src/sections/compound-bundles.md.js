@@ -12,7 +12,7 @@ Line appearance for a bundle of relationships:
 * In a medium scale graph (hem scale 3 and 1): **double stroke** (with transparency in between them)
 * In a small scale graph (below hem scale 1): **default (1-stroke) line**
 
-  ![Compound paths expanded](${require('../images/compound-bundles-1.png')})
+  ![Relationship bundles at different scales](${require('../images/compound-bundles-1.png')})
 
 For the small to large scale graphs (above 0.5 hem): Use an arrowhead if all the relationships (represented by a single line) point in the same direction, otherwise use the “no arrowhead” undirected version. For very small scale graphs, use the small scale default: do not display an arrowhead.
 `;
