@@ -1,5 +1,5 @@
 export default `
-## Scale
+### Scale
 
 In the chapters to come there will be different rules to follow depending on how many nodes are visible and how big these nodes are. For naming conventions we’re using *small*, *medium* and *large scale*, in a similar manner as used for geographical maps:
 * **Large scale** You’re up close to the graph, the nodes will be very big and most likely you would only be able to see a few handful or dozen on your screen. You’re focusing mostly on the exact relationships between the nodes then the structure of the graph in itself.

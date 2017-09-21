@@ -1,7 +1,7 @@
 export default `
-# Appendix
+## Appendix
 ---
 
-## hem scale
+### hem scale
 
 `;

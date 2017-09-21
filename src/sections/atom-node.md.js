@@ -1,5 +1,5 @@
 export default `
-## Node
+### Node
 
 A single data record, with 0 or more labels, and 0 or more properties.  Labels are a special type of property that groups the node. For example, a node can be a single data record with property name=“Emma Watson” and labels “Actress” and “British”. Another node can be a single data record with property title=“Beauty and the Beast” and label “Movie”.
 

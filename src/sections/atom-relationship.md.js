@@ -1,5 +1,5 @@
 export default `
-## Relationship
+### Relationship
 
 An association between exactly two Nodes, with a direction "from" one and "to" another.  It must have a type, and can have 0 or more properties. For example, there can be a relationship “from” the Emma Watson node “to” the Beauty and the Beast with type “ACTED_IN” and property character=”Belle”.
 
@@ -23,6 +23,6 @@ A relationship should be represented by a **line**. The default relationship has
 
 * Line color: Can be chosen by the user, but shouldn’t be used to indicate categorical attributes, such as the type/role of the relationships. Or any numerical value, in that case, use line thickness instead. Color *can* however be used for highlighting, dimming, and tracing paths. Arrowhead color and fill should be the same as the line stroke.
 
-### Self relationship
+#### Self relationship
 This relationship connects the same node together. For example, the relationship of FAVORITE_ACTRESS from the node “Emma Watson” could be “Emma Watson” herself.
 `;

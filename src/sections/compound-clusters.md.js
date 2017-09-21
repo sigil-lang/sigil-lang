@@ -1,5 +1,5 @@
 export default `
-## Clusters
+### Clusters
 
 A collection of nodes and relationships grouped by structure into neighborhoods. Groups of nodes that are highly interconnected, and less connected to other nodes, can be grouped into a cluster. This might happen if we look at the cast of the Harry Potter movies, who have worked together for 8 movies, but most have not worked on many other movies. Therefore, the cast of Harry Potter will be heavily interconnected and could be combined into a cluster (and collapsed to look like a cluster node).
 

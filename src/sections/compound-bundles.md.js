@@ -1,5 +1,5 @@
 export default `
-## Bundles
+### Bundles
 
 A collection of multiple relationships between two specific nodes. These can both be atomic or aggregate nodes, or a mix.
 

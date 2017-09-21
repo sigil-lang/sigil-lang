@@ -1,5 +1,5 @@
 export default `
-# Aggregate Nodes
+## Aggregate Nodes
 ---
 
 A group of atomic nodes aggregated together.  For example:

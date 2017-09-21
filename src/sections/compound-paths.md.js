@@ -1,5 +1,5 @@
 export default `
-## Paths
+### Paths
 A collection of nodes and relationships, in a continuous node-relationship-node pattern.
 
 Line appearance for paths:
