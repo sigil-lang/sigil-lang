@@ -22,9 +22,9 @@ var sections = [
       {id: 'compound-bundles', title: 'Bundles'},
     ],
   },
-  // {
-  //   id: 'sections', title: 'Sections',
-  // },
+  {
+    id: 'sections', title: 'Sections',
+  },
   // {
   //   id: 'appendix', title: 'Appendix',
   // }
