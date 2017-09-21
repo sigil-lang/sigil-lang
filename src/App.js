@@ -31,9 +31,9 @@ var sections = [
   {
     id: 'sections', title: 'Sections',
   },
-  // {
-  //   id: 'appendix', title: 'Appendix',
-  // }
+  {
+    id: 'appendix', title: 'Appendix',
+  }
 ];
 
 var navWidth = 200;
