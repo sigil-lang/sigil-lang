@@ -5,6 +5,12 @@ import _ from 'lodash';
 // determines what sections to load and their order
 var sections = [
   {
+    id: 'intro', title: 'Introduction',
+    children: [
+      {id: 'intro-scale', title: 'Scale'},
+    ],
+  },
+  {
     id: 'atom', title: 'Atomic Units',
     children: [
       {id: 'atom-node', title: 'Node'},
