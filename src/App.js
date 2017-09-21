@@ -18,6 +18,7 @@ var sections = [
     id: 'compound', title: 'Compound Units',
     children: [
       {id: 'compound-paths', title: 'Paths'},
+      {id: 'compound-clusters', title: 'Clusters'},
     ],
   },
   // {
