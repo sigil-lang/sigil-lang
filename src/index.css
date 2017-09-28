@@ -1,8 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
-  line-height: 2em;
+  font-family: 'Libre Baskerville', serif;
+  line-height: 1.6em;
+  color: #222;
 }
 
 .App {
@@ -15,6 +16,23 @@ body {
   position: fixed;
   height: 100%;
   box-shadow: 0 0 5px #999;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+  font-size: 2em;
+}
+h2 {
+  font-size: 1.75em;
+}
+h3 {
+  font-size: 1.5em;
+}
+h4 {
+  font-size: 1.25em;
 }
 
 iframe {
