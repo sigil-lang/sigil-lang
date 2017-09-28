@@ -36,16 +36,14 @@ var sections = [
   }
 ];
 
-var navWidth = 200;
-var padding = 20;
+var navWidth = 250;
+var padding = 40;
 class App extends Component {
 
   render() {
     var navStyle = {
       width: navWidth,
       padding,
-      position: 'fixed',
-      borderRight: '1px solid',
     };
     var contentStyle = {
       marginLeft: navWidth + 2 * padding,

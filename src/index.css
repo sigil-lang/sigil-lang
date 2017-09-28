@@ -3,14 +3,18 @@ body {
   padding: 0;
   font-family: sans-serif;
   line-height: 2em;
-  background-color: #eaeff2;
 }
 
 .App {
   max-width: 1200px;
   background-color: #fff;
-  padding: 20px;
   margin: auto;
+}
+
+#nav {
+  position: fixed;
+  height: 100%;
+  box-shadow: 0 0 5px #999;
 }
 
 iframe {
