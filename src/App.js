@@ -54,6 +54,17 @@ class App extends Component {
     )
   }
 
+  renderSection(section) {
+    var text = require('./sections/' + section.id + '.md.js');
+    text = text && text.default;
+
+    return (
+      <Section key={section.id} id={section.id} text={text}>
+        {section.children && _.map(section.children, child => this.renderSection(child))}
+      </Section>
+    );
+  }
+
   render() {
     var navStyle = {
       width: navWidth,
@@ -65,19 +76,7 @@ class App extends Component {
     };
 
     var navLinks = _.map(sections, section => this.renderNav(section));
-
-    var sectionEls = _.chain(sections)
-      .reduce((array, section) => {
-        array.push(section);
-        // and also push in children
-        _.each(section.children, section => array.push(section));
-        return array;
-      }, []).map(section => {
-        var text = require('./sections/' + section.id + '.md.js');
-        text = text && text.default;
-
-        return (<Section key={section.id} id={section.id} text={text} />);
-      }).value();
+    var sectionEls = _.map(sections, section => this.renderSection(section));
 
     return (
       <div className="App">

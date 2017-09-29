@@ -11,6 +11,7 @@ class Section extends Component {
     return (
       <div className="Section" id={this.props.id} style={style}>
         <div dangerouslySetInnerHTML={rawMarkup} />
+        {this.props.children}
       </div>
     );
   }
