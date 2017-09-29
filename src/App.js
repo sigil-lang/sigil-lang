@@ -38,7 +38,21 @@ var sections = [
 
 var navWidth = 250;
 var padding = 40;
+var blue = '#206ca9';
+
 class App extends Component {
+
+  renderNav(section) {
+    var children = section.children && _.map(section.children, child => this.renderNav(child));
+    return (
+      <div key={section.id}>
+        <a href={'#' + section.id}>{section.title}</a>
+        <div style={{marginLeft: 20, marginBottom: 10}}>
+          {children}
+        </div>
+      </div>
+    )
+  }
 
   render() {
     var navStyle = {
@@ -50,17 +64,7 @@ class App extends Component {
       padding,
     };
 
-    var navLinks = _.map(sections, section => {
-      return (
-        <div>
-          <a href={'#' + section.id}>{section.title}</a>
-          <ul>
-            {_.map(section.children, section =>
-              <li><a href={'#' + section.id}>{section.title}</a></li>)}
-          </ul>
-        </div>
-      )
-    });
+    var navLinks = _.map(sections, section => this.renderNav(section));
 
     var sectionEls = _.chain(sections)
       .reduce((array, section) => {
@@ -78,6 +82,7 @@ class App extends Component {
     return (
       <div className="App">
         <div id='nav' style={navStyle}>
+          <h1>Sigil</h1>
           {navLinks}
         </div>
         <div id='content' style={contentStyle}>
