@@ -42,11 +42,44 @@ var blue = '#206ca9';
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {sectionId: sections[0].id};
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', _.throttle(this.onScroll, 200));
+  }
+
+  onScroll = () => {
+    // on scroll determine section user is in
+    var scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    var section;
+    _.each(document.getElementsByClassName('Section'), el => {
+      var {top, bottom} = el.getBoundingClientRect();
+      // console.log(el.id, top, bottom, window.innerHeight)
+      // bc bounding client rect gives us position relative to the viewport
+      // we're in the section whose top is already visible (top >= 0)
+      // but not past the window height
+      if ((top >= 0 && top <= window.innerHeight) || (top <= 0 && bottom >= window.innerHeight)) {
+        section = el;
+      }
+    });
+    var sectionId = section && section.id;
+
+    // if section is different from previous, set section
+    if (sectionId && sectionId !== this.state.sectionId) {
+      this.setState({sectionId});
+    }
+  }
+
   renderNav(section) {
+    var activeClass = this.state.sectionId === section.id ? 'active' : '';
     var children = section.children && _.map(section.children, child => this.renderNav(child));
     return (
       <div key={section.id}>
-        <a href={'#' + section.id}>{section.title}</a>
+        <a className={activeClass} href={'#' + section.id}>{section.title}</a>
         <div style={{marginLeft: 20, marginBottom: 10}}>
           {children}
         </div>

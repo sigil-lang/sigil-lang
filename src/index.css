@@ -48,9 +48,12 @@ img {
 a {
   color: inherit;
   text-decoration: none;
-  border-bottom: 1px solid;
 }
 
 a:hover {
-  border-bottom: 1px dashed;
+  border-bottom: 1px solid;
+}
+
+a.active {
+  border-bottom: 3px solid rgb(32, 108, 169);
 }
