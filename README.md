@@ -22,7 +22,18 @@ export default `
   // write content in here
 `;
 ```
-4. In `App.js`, add file name to `sectionIds` array, in the order you want it to appear.
+4. In `App.js`, add file name to `sections` array, in the order you want it to appear.  Each section requires an `id` and a `title`, and has an optional attribute `children`.  For example:
+```
+var sections = [
+  {
+    id: 'intro', title: 'Introduction',
+    children: [
+      {id: 'intro-scale', title: 'Scale'},
+    ],
+  },
+  ...
+];
+```
 
 And that's it!  It should now appear in the homepage, with a corresponding navigation link.
 
