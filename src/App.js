@@ -46,7 +46,8 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {sectionId: sections[0].id, navOpen: !isMobile.phone};
+    // navOpen is only relevant in mobile
+    this.state = {sectionId: sections[0].id, navOpen: false};
   }
 
   componentDidMount() {
@@ -84,12 +85,18 @@ class App extends Component {
     this.setState({navOpen: !this.state.navOpen});
   }
 
+  selectSection = () => {
+    this.setState({navOpen: false})
+  }
+
   renderNav(section) {
     var activeClass = this.state.sectionId === section.id ? 'active' : '';
     var children = section.children && _.map(section.children, child => this.renderNav(child));
     return (
       <div key={section.id}>
-        <a className={activeClass} href={'#' + section.id}>{section.title}</a>
+        <a className={activeClass} href={'#' + section.id} onClick={this.selectSection}>
+          {section.title}
+        </a>
         <div style={{marginLeft: 20, marginBottom: 10}}>
           {children}
         </div>
