@@ -14,8 +14,9 @@ body {
 
 #nav {
   position: fixed;
-  height: 100%;
   box-shadow: 0 0 5px #999;
+  background: #fff;
+  overflow: scroll;
 }
 
 h1, h2, h3, h4, h5 {

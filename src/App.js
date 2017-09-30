@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Section from './Section';
 import _ from 'lodash';
+import isMobile from 'ismobilejs';
 
 // determines what sections to load and their order
 var sections = [
@@ -101,6 +102,7 @@ class App extends Component {
   render() {
     var navStyle = {
       width: navWidth,
+      height: '100%',
       padding,
     };
     var contentStyle = {
@@ -108,13 +110,27 @@ class App extends Component {
       padding,
     };
 
+    var menuButton = null;
     var navLinks = _.map(sections, section => this.renderNav(section));
     var sectionEls = _.map(sections, section => this.renderSection(section));
+
+    if (isMobile.phone) {
+      navStyle.width = window.innerWidth - 2 * padding;
+      navStyle.paddingTop = 0; // so that header isn't so far down
+      navStyle.height = null;
+      navStyle.maxHeight = window.innerHeight - padding;
+
+      contentStyle.marginLeft = 0;
+      contentStyle.padding /= 2;
+      contentStyle.width = window.innerWidth - padding;
+
+      menuButton = (<span style={{float: 'right'}}>☰✕</span>);
+    }
 
     return (
       <div className="App">
         <div id='nav' style={navStyle}>
-          <h1>Sigil</h1>
+          <h1>Sigil {menuButton}</h1>
           {navLinks}
         </div>
         <div id='content' style={contentStyle}>
