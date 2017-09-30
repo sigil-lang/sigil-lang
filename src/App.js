@@ -46,11 +46,16 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {sectionId: sections[0].id};
+    this.state = {sectionId: sections[0].id, navOpen: !isMobile.phone};
   }
 
   componentDidMount() {
     window.addEventListener('scroll', _.throttle(this.onScroll, 200));
+
+    // shift down the content to make room for nav header if in phone
+    if (isMobile.phone) {
+      document.getElementById('content').style['padding-top'] = `${document.getElementById('nav').offsetHeight}px`;
+    }
   }
 
   onScroll = () => {
@@ -73,6 +78,10 @@ class App extends Component {
     if (sectionId && sectionId !== this.state.sectionId) {
       this.setState({sectionId});
     }
+  }
+
+  toggleNav = () => {
+    this.setState({navOpen: !this.state.navOpen});
   }
 
   renderNav(section) {
@@ -124,7 +133,17 @@ class App extends Component {
       contentStyle.padding /= 2;
       contentStyle.width = window.innerWidth - padding;
 
-      menuButton = (<span style={{float: 'right'}}>☰✕</span>);
+      menuButton = (
+        <span style={{float: 'right'}} onClick={this.toggleNav}>
+          {this.state.navOpen ? '✕' : '☰'}
+        </span>
+      );
+
+      // if navigation isn't open
+      if (!this.state.navOpen) {
+        navLinks = null;
+        navStyle.paddingBottom = 0;
+      }
     }
 
     return (
