@@ -34,6 +34,9 @@ var sections = [
   },
   {
     id: 'appendix', title: 'Appendix',
+    children: [
+      {id: 'appendix-hem', title: 'HEM Scale'},
+    ],
   }
 ];
 
