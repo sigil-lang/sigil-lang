@@ -6,7 +6,10 @@ A visual language for illustrating property graphs
 npm start
 ```
 
-**To push the project up to `http://sigil-lang.github.io/sigil-lang`**
+**To push the project up to `http://sigil-lang.github.io/`**
+
+_Note_: Edit in `content` branch, then publish to `master`.
+
 ```
 npm run build & npm run deploy
 ```
@@ -47,4 +50,3 @@ For ease, the interactives are loaded into the page with an iframe, instead of t
 <iframe width='100%' height='600px' src=${process.env.PUBLIC_URL + '/visuals/graph-explorer'}></iframe>
 ```
 In this case, the interactive will load from the **graph-explorer** folder.  Make sure to include `process.env.PUBLIC_URL` in the `src` so Webpack knows to point to the `/public` directory.  Also make sure to set the `width` and `height` of the iframe.
-
