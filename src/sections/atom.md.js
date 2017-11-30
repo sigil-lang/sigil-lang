@@ -1,9 +1,7 @@
 export default `
-# Atomic Units
+## Atomic Units
 ---
 
-## Node
-
-## Relationship
+The base units of a graph, where it cannot be subdivided any further.
 
 `;
